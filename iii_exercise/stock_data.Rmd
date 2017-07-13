@@ -1,0 +1,44 @@
+---
+title: "?Ѳ?????:?̰????L???@"
+author: "Alisa"
+date: "2017?~07??12??"
+practice: "data frame"
+---
+```{R}
+getwd()
+setwd("D:/R/riii/data")
+getwd()
+tw2330 =read.csv("2330.csv",header =TRUE)
+
+str(tw2330)
+summary(tw2330)
+class(tw2330)
+
+head(tw2330)
+tail(tw2330)
+tw2330[1:3,]
+tw2330
+
+tw2330$newDate = as.Date(tw2330$Date)
+str(tw2330)
+tw2330$newDate
+
+max(tw2330$Close)
+```
+
+```{R}
+# method 1
+stock2 =tw2330[tw2330$newDate >="2014-03-01" & tw2330$newDate  <= "2014-08-31",]
+head(stock2)
+max(stock2$Close)
+
+# method 2:summary()
+summary(stock2$Close)
+
+# method3 :
+ordered_stock = stock2[order(stock2$Close, decreasing = T),]
+ordered_stock[1,]
+#ignored
+ordered_stock[nrow(ordered_stock),]
+ordered_stock[1,"Close"] - ordered_stock[nrow(ordered_stock),"Close"]
+```

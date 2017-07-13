@@ -1,0 +1,74 @@
+---
+title: '探索性資料分析'
+author: "Alisa"
+date: "2017年7月13日"
+output: html_document
+---
+
+```{R}
+#import data
+getwd()
+setwd("D:/R/riii/Statistics")
+load("cdc.Rdata")
+
+str(cdc)
+head(cdc)
+tail(cdc)
+names(cdc)
+
+cdc$exerany = as.factor(cdc$exerany)
+cdc$hlthplan = as.factor(cdc$hlthplan)
+cdc$smoke100 = as.factor(cdc$smoke100)
+
+str(cdc)
+
+table(cdc$smoke100)
+
+#一維次數分配表
+table(cdc$exerany)
+
+#相對比例
+table(cdc$exerany) / length(cdc$exerany)
+
+#二維次數分配表
+table(cdc$gender,cdc$exerany)
+
+#連續型資料作表
+table(cdc$height)
+summary(cdc$height)
+cut(cdc$height,seq(45,95,by=5))
+
+#包含上界不包含下界
+table(cut(cdc$height,seq(45,95,by=5),right=T))
+
+#包含下界不包含上界
+table(cut(cdc$height,seq(45,95,by=5),right=F)) 
+table(cut(cdc$height,seq(45,95,by=5),right=F,labels=seq(1,length(seq(45,95,by=5))-1)))
+cdc$h_group = cut(cdc$height,seq(45,95,by=5),right=F)
+str(cdc)
+```
+
+#統計值的練習
+```{R}
+getwd()
+setwd("D:/R/riii")
+gdp = read.csv("data/gdp.csv")
+str(gdp)
+
+head(gdp)
+tail(gdp)
+# 資料內容沒有齊全
+complete.cases(gdp)
+gdp[complete.cases(gdp),]
+gdp =gdp[complete.cases(gdp),]
+gdp$GDP = as.numeric(sub(",", "", gdp$GDP))
+gdp$Export = as.numeric(sub(",", "", gdp$Export))
+
+summary(gdp)
+cor(gdp$Export, gdp$GDP)
+cov(gdp$Export, gdp$GDP)
+
+data =gdp[,c('Year','GDP','Export')]
+cov(data)
+cor(data)
+```

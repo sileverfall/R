@@ -1,0 +1,33 @@
+---
+title: "九九乘法表"
+author: "Alisa"
+date: "2017年07月13日"
+practice: "loop"
+---
+```{R}
+mat = matrix(rep(1,9^2),nrow = 9)
+
+# method1 : for loop
+for(i in 1:9){
+  for(j in 1:9){
+    #mat[i,j] = i * j;
+    mat[i,j] = paste(i,"*",j,"= ",i*j)
+  }
+}
+
+mat
+```
+```{R}
+# method 2 :matrix
+#2-1 two matixs
+mat1 = matrix(1:9, nrow = 9);
+mat2 = matrix(1:9, nrow = 1);
+mat = mat1 %*% mat2;
+mat
+
+#2-2 matrix transpose
+mat1 = matrix(1:9,nrow=9)
+mat1
+t(mat1)
+mat1 %*% t(mat1)
+```
