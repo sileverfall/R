@@ -1,0 +1,70 @@
+---
+title: "ggplot2"
+author: "Alisa"
+date: "2017年7月20日"
+output: html_document
+---
+
+```{R}
+diamonds
+options(max.print = 999999)
+getOption("max.print")
+qplot(carat,price,data=diamonds)
+
+#對數變換
+qplot(log(carat),log(price),data=diamonds)
+
+# 裝飾屬性
+set.seed(1410)
+dsmall = diamonds[sample(nrow(diamonds), 100), ] 
+qplot(carat, price, data = dsmall, colour = color) 
+qplot(carat, price, data = dsmall, shape = cut) 
+
+# Alpha 值
+qplot(carat, price, data = diamonds, alpha = I(1/10)) 
+qplot(carat, price, data = diamonds, alpha = I(1/100)) 
+qplot(carat, price, data = diamonds, alpha = I(1/200)) 
+```
+```
+geom = “point”，畫散點圖，當提供x,y時為缺省選項 
+geom = “smooth”，畫平滑曲線及標準誤 
+geom = “boxplot”，畫箱線圖 
+geom = “path” 或geom = “line”，畫連線 
+geom = “histogram”，畫長條圖，當只提供x時為缺省選項 
+geom =“freqpoly”，畫頻率多邊形 
+geom = “density”，畫密度曲線 
+geom = “bar”，畫直條圖
+
+```
+```{R}
+qplot(carat, price, data = dsmall, geom = c("point", "smooth")) 
+qplot(carat, price, data = diamonds, geom = c("point", "smooth")) 
+
+#彎曲程度
+qplot(carat, price, data = dsmall, geom = c("point", "smooth"),span = 0.2) 
+qplot(carat, price, data = dsmall, geom = c("point", "smooth"),span = 1)
+
+#boxplot /jitter
+qplot(color, price / carat, data = diamonds, geom = "boxplot") 
+qplot(color, price / carat, data = diamonds, geom = "jitter") 
+qplot(color, price / carat, data = diamonds, geom = "jitter",alpha = I(1 / 5)) 
+qplot(color, price / carat, data = diamonds, geom = "jitter",alpha = I(1 / 50)) 
+qplot(color, price / carat, data = diamonds, geom = "jitter",alpha = I(1 / 200)) 
+
+#histogram
+qplot(carat, data = diamonds, geom = "histogram") 
+qplot(carat, data = diamonds, geom = "histogram", binwidth = 1,xlim = c(0,3)) 
+qplot(carat, data = diamonds, geom = "histogram", binwidth = 0.1,xlim = c(0,3)) 
+qplot(carat, data = diamonds, geom = "histogram", binwidth = 0.01,xlim = c(0,3)) 
+qplot(carat, data = diamonds, geom = "histogram", fill = color)
+
+#density
+qplot(carat, data = diamonds, geom = "density") 
+qplot(carat, data = diamonds, geom = "density", colour = color) 
+
+#bar-plot
+qplot(color, data = diamonds, geom = "bar") 
+qplot(color, data = diamonds, geom = "bar", weight = carat) + 
+scale_y_continuous("carat") 
+
+```

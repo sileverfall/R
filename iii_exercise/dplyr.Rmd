@@ -1,0 +1,152 @@
+---
+title: "dplyr"
+author: "Alisa"
+date: "2017年7月20日"
+output: html_document
+---
+
+```{R}
+getwd()
+setwd('D:/R/riii/Statistics')
+load('applenews.RData')
+
+install.packages('dplyr')
+library(dplyr)
+
+#原先R 提供的過濾功能
+e_applenews=applenews[applenews$category == "娛樂",]
+head(e_applenews)
+
+#dplyr 的過濾功能
+de_applenews=filter(applenews, category == "娛樂")
+head(de_applenews)
+
+#and/or 
+filter(applenews, category == "娛樂" & clicked > 1000) %>% head()
+filter(applenews, category == "娛樂" | clicked > 1000) %>% head()
+
+#篩選多個類別
+filter(applenews, category %in% c("娛樂", "社會")) %>% head()
+
+#原先R的欄位選取
+r_applenews =applenews[, c("category","clicked")]
+head(r_applenews)
+
+#dplyr 的欄位選取
+select(applenews,category,clicked) %>% head()
+select(applenews,category:clicked) %>% head()
+select(applenews,matches('click')) %>% head()
+
+#想同時filter 和 select
+filter(select(applenews,category:clicked),category == '娛樂')
+
+#使用Chaining
+select(applenews,category:clicked) %>%
+  filter(category == '娛樂')
+
+applenews %>% 
+  select(category:clicked) %>%
+  filter(category == '娛樂')
+
+```
+# 　資料串接
+```{R}
+#[原本]:想同時filter 和 select
+filter(select(applenews,category:clicked),category == '娛樂')
+
+#使用Chaining
+select(applenews,category:clicked) %>%
+  filter(category == '娛樂')
+
+applenews %>% 
+  select(category:clicked) %>%
+  filter(category == '娛樂')
+
+#使用Arrange將資料做排序(order by)
+applenews %>%
+  select(category,clicked) %>% 
+  filter(category == "社會") %>% 
+  arrange(desc(clicked))
+
+# 總點擊數
+freqsum = applenews %>%
+  select(clicked) %>% 
+  sum()
+```
+# 新增欄位 
+```{R}
+#使用mutate
+applenews %>%
+  select(title, category,clicked) %>% 
+  mutate(portion= clicked / freqsum) %>%
+  arrange(desc(portion)) %>%
+  head()
+
+#新增portion欄位
+applenews = applenews %>%
+  mutate(portion= clicked / freqsum)
+
+head(applenews)
+#group_by & summarise
+applenews %>%
+  group_by(category) %>%
+  summarise(clicked_sum = sum(clicked, na.rm=TRUE)) %>%
+  arrange(desc(clicked_sum))
+```
+## 計算
+```{R}
+#多個欄位計算
+applenews %>%
+  group_by(category) %>% 
+  summarise_at(.vars=vars(clicked),.funs=funs(sum,mean))
+
+applenews %>%
+  group_by(category) %>%
+  summarise_at(.funs=funs(min,max), .vars=vars(matches('clicked')), na.rm=T)
+
+#一般計數
+applenews %>%
+  select(category) %>%
+  summarise(n())
+
+#不重複計數
+applenews %>%
+  select(category) %>%
+  summarise(n_distinct(category))
+
+cat_stat = applenews %>%
+  group_by(category) %>%
+  summarise(clicked_sum = sum(clicked)) 
+```
+## 繪圖
+```{R}
+#繪製長條圖
+barplot(cat_stat$clicked_sum, names.arg=cat_stat$category, col=rainbow(length(cat_stat$category)))
+#繪製圓餅圖
+pie(cat_stat$clicked_sum, label = cat_stat$category)
+
+```
+## 連接資料庫
+```{R}
+#連接資料庫範例(以sqlite3為例)
+# sqlite3 download page: https://www.sqlite.org/download.html
+install.packages('dbplyr')
+install.packages('RSQLite')
+library('dbplyr')
+library('RSQLite')
+
+my_database = src_sqlite('./mydatabase',create=T)
+copy_to(my_database,applenews,temporary = F)
+tbl(my_database,"applenews")
+tbl(my_database,"applenews") %>% collect()
+
+category_stat = tbl(my_database,"applenews") %>% 
+  group_by(category) %>%
+  summarise_at(.funs=funs(min,max,mean), .vars=vars(matches('clicked'))) %>%
+  arrange(desc(mean)) %>%
+  collect()
+
+library('ggplot2')
+g <- ggplot(category_stat,aes(x=category,y=mean))
+g + geom_bar(stat='identity') + theme(text=element_text(size=16,  family="Songti SC")) + scale_x_discrete(limits=category_stat$category)
+```
