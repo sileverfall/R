@@ -1,0 +1,90 @@
+---
+title: '20180601'
+author: "Alisa"
+date: "2018/6/1"
+output: html_document
+---
+
+```{R}
+getwd() #檢視現在工作的位置
+setwd('~/Documents/R/BasicR/')#設定工作的位置
+```
+
+```{R}
+#觀看套件文件
+help(package = 'base')
+#觀看功能說明
+?sum
+?base::sum
+#搜尋說明功能
+help.search('sum')
+??sum
+```
+
+```{R}
+#常用指令
+data()# 使用內建資料集
+ls()# 查看現有變數
+rm()#刪除現有變數
+class() #查看資料型態
+str()#查看資料結構
+```
+
+```{R}
+#向量
+#長度相等運算
+x=c(1,2,3,7)
+y=c(2,3,5,1)
+x+y
+x*y
+x-y
+x/y
+
+#長度不等運算
+x+10
+x + c(10)
+x + c(1,2)#向量不足會重複循環
+x + c(1,2,1,2)
+
+#向量長度
+length(x)
+
+#增加向量元素
+c(x,y)
+
+#向量加總
+sum(x)
+
+#指定向量名
+names(x) = c("A","B","C","D") 
+x
+#boolean
+x > 2
+x <= 1
+x != 2
+
+#index 從1開始
+x[c(1)] #index
+x['A'] # name
+x[x > 1 ] # boolean factor(condition)
+
+#seq()
+seq(from=1,to=20)
+1:20
+seq(1,20,by=2) #間隔
+seq(1,20,length=3) #長度為3，而且要等距
+
+#rep()重複產生某元素
+rep(1,times=5)
+rep(c(1,2),times=5)#重複12五次
+rep(c(1,2),each=5) #五個1五個2
+rep_len(c(1,2),5)#直到元素滿五個為止
+
+#paste()串接
+paste("life","is","so","complex")
+paste("so","complex",sep="-")
+paste(c("life","is"),1:2)
+paste(c("life","is"),1:2,collapse = "+")
+length(paste("life","is","so","complex"))
+length(paste(c("life","is"),1:2))
+```
