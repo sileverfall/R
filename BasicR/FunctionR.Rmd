@@ -1,0 +1,94 @@
+---
+title: "FunctionR"
+author: "Alisa"
+date: "2018/6/5"
+output: html_document
+---
+
+```{R}
+#資料讀取與寫入
+#檢視目錄所在
+getwd()
+#修改所在目錄
+setwd("/Users/Wan_Ning/Documents/R/BasicR")
+
+#讀取
+read.table("wow.txt",header = TRUE,sep = "|")
+read.csv("us.csv",header = TRUE)
+#寫入
+write.table(test.data,file ="test.txt",sep=" ")
+write.csv(test.data,file = "test.csv")
+
+#從RData
+#儲存
+save(x=iris,file = "iris.RData")
+#刪除
+rm(iris)
+#讀取
+load("iris.RData")
+```
+
+```{R}
+#流程控制
+#if...else
+x=5;
+if(x>2){
+  print("x>2");
+}else if(x==2){
+  print("x==2")
+}else{
+  print("x< 2")
+}
+
+#for
+for(i in 1:10){
+  print(i);
+}
+
+sum = 0
+for (i in 1:100){
+  sum = sum+i;
+  
+}
+
+sum
+#Double for
+mat = matrix(1:9,byrow=TRUE,nrow=3)
+for(i in seq_len(nrow(mat))){
+  for(j in seq_len(ncol(mat))){
+    print(mat[i,j])
+  }
+}
+#while
+sum = 0;
+cnt = 0;
+while(cnt <=100){
+  sum =sum+cnt;
+  cnt = cnt+1;
+}
+sum
+```
+```{R}
+#Function籲社會return最後一行
+f = function(a,b){
+  a*2
+}
+f(2)
+```
+```{R}
+#lappaly:將函式套用在List上每一個元素 return list
+x = ist(c(1,2,3,4),c(5,6,7,8))
+lapply(x,sum)
+lapply(x,mean)
+#sapply:產生較lapply簡化的結果 return vector
+sapply(x,sum)
+#apply:將函式套用在array中
+m = matrix(1:4,byrow=TRUE,nrow =2)
+m
+apply(m,1,sum) #rowsums 1
+apply(m,2,sum) #colsums 2
+#tapply: 套用函式在向量vector的部分子集合
+x =c(80,70,59,88,72,57)
+t = c(1,1,2,1,1,2)
+tapply(x,t,mean)
+```
